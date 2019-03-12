@@ -142,4 +142,82 @@ function goalOrientedRobot({ place, parcels }, route) {
   return { direction: route[0], memory: route.slice(1) };
 }
 
-runRobot(VillageState.random(), goalOrientedRobot, []);
+function countSteps(state, robot, memory) {
+  for (let steps = 0; ; steps++) {
+    if (state.parcels.length == 0) {
+      return steps;
+    }
+    let action = robot(state, memory);
+    state = state.move(action.direction);
+    memory = action.memory;
+  }
+}
+
+function compareRobots(robot1, memory1, robot2, memory2) {
+  let total1 = 0,
+    total2 = 0;
+
+  for (let i = 0; i < 100; i++) {
+    let state = VillageState.random();
+
+    total1 += countSteps(state, robot1, memory1);
+    total2 += countSteps(state, robot2, memory2);
+  }
+
+  console.log(`Robot 1 average steps ${total1 / 100}`);
+  console.log(`Robot 2 average steps ${total2 / 100}`);
+}
+
+function efficientRobot({ place, parcels }, route) {
+  if (route.length == 0) {
+    let routes = parcels.map(parcel => {
+      if (parcel.place != place) {
+        return {
+          route: findRoute(roadGraph, place, parcel.place),
+          pickUp: true
+        };
+      } else {
+        return {
+          route: findRoute(roadGraph, place, parcel.address),
+          pickUp: false
+        };
+      }
+    });
+
+    function score({ route, pickUp }) {
+      return (pickUp ? 0.5 : 0) - route.length;
+    }
+
+    route = routes.reduce((a, b) => (score(a) > score(b) ? a : b)).route;
+  }
+
+  return { direction: route[0], memory: route.slice(1) };
+}
+
+// runRobot(VillageState.random(), goalOrientedRobot, []);
+// compareRobots(goalOrientedRobot, [], efficientRobot, []);
+
+class PGroup {
+  constructor(items = []) {
+    this.items = items;
+  }
+
+  add(item) {
+    if (this.has(item)) return this;
+    return new PGroup(this.items.concat([item]));
+  }
+
+  delete(item) {
+    if (!this.has(item)) return this;
+    return new PGroup(this.items.filter(e => e !== item));
+  }
+
+  has(item) {
+    return this.items.includes(item);
+  }
+}
+
+PGroup.empty = new PGroup();
+let group1 = PGroup.empty;
+console.log(group1.add(5).add(6));
+console.log(group1.items);
