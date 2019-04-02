@@ -55,5 +55,38 @@
 // console.log(quotedText.exec("she said 'hello'"));
 
 // Second element undefined cause group has no match, if many matches, second element last match of the group
-console.log(/bad(ly)?/.exec("bad")); // [ 'bad', undefined, index: 0, input: 'bad', groups: undefined ]
-console.log(/(\d)+/.exec("324")); // [ '324', '4', index: 0, input: '324', groups: undefined ]
+// console.log(/bad(ly)?/.exec('bad')); // [ 'bad', undefined, index: 0, input: 'bad', groups: undefined ]
+// console.log(/(\d)+/.exec('324')); // [ '324', '4', index: 0, input: '324', groups: undefined ]
+
+// Date
+// console.log(new Date()); // Todays date
+// console.log(new Date(2019, 1, 28, 12, 34, 56, 800)); // specific date
+// console.log(new Date(Date.now())); // Todays date
+
+// let date = new Date(2013, 4, 5, 14, 15, 13, 450);
+// console.log('Full year', date.getFullYear());
+// console.log('Month', date.getMonth());
+// console.log('Day', date.getDate());
+// console.log('Hours', date.getHours());
+// console.log('Minutes', date.getMinutes());
+// console.log('Seconds', date.getSeconds());
+// console.log(`${date.getFullYear()} - 1900`, date.getYear());
+// console.log('Number of miliseconds since 1970', date.getTime());
+
+// This function extracts date value with a date regex in a word boundary from any string
+
+// Word boundary : /b..../b
+
+// function getDate(string) {
+//   let [_, day, month, year] = /\b(\d{1,2})-(\d{1,2})-(\d{4})\b/.exec(string);
+//   return new Date(year, month - 1, day);
+// }
+
+// console.log(getDate('I was born on 18-8-1994')); //  1994-08-17T18:00:00.000Z
+
+// Choice Patterns
+let nerdPattern = /\b\d+ (book|pencil|pen)s?\b/;
+
+console.log(nerdPattern.test('I have 2 books')); // true
+console.log(nerdPattern.test('I have only 1 pencil')); // true
+console.log(nerdPattern.test('2 bookpens')); // false
