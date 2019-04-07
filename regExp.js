@@ -85,8 +85,37 @@
 // console.log(getDate('I was born on 18-8-1994')); //  1994-08-17T18:00:00.000Z
 
 // Choice Patterns
-let nerdPattern = /\b\d+ (book|pencil|pen)s?\b/;
+// let nerdPattern = /\b\d+ (book|pencil|pen)s?\b/;
 
-console.log(nerdPattern.test('I have 2 books')); // true
-console.log(nerdPattern.test('I have only 1 pencil')); // true
-console.log(nerdPattern.test('2 bookpens')); // false
+// console.log(nerdPattern.test('I have 2 books')); // true
+// console.log(nerdPattern.test('I have only 1 pencil')); // true
+// console.log(nerdPattern.test('2 bookpens')); // false
+
+// Replace all with regex
+// console.log('papa'.replace(/p/g, 'm'));
+
+// let wrongOrder = 'world-hello\ncare-take\non-come';
+// console.log(wrongOrder.replace(/(\w+)-(\w+)/g, '$2 $1'));
+
+// Pass func as a second argument
+
+console.log(
+  'In physics, we learn that alpha beta gama rays are useful'.replace(
+    /alpha|beta|gama/g,
+    str => str.toUpperCase()
+  )
+);
+// function minusOne(match, amount, unit) {
+//   amount = Number(amount) - 1;
+//   if (amount == 1) {
+//     unit = unit.slice(0, unit.length - 1);
+//   } else if (amount == 0) {
+//     amount = 'no';
+//   }
+
+//   return amount + ' ' + unit;
+// }
+
+// let bookDetails = 'I have 1 novel, 7 textbooks and 2 magazines';
+
+// console.log(bookDetails.replace(/(\d+) (\w+)/g, minusOne));
