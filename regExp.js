@@ -99,12 +99,12 @@
 
 // Pass func as a second argument
 
-console.log(
-  'In physics, we learn that alpha beta gama rays are useful'.replace(
-    /alpha|beta|gama/g,
-    str => str.toUpperCase()
-  )
-);
+// console.log(
+//   'In physics, we learn that alpha beta gama rays are useful'.replace(
+//     /alpha|beta|gama/g,
+//     str => str.toUpperCase()
+//   )
+// );
 // function minusOne(match, amount, unit) {
 //   amount = Number(amount) - 1;
 //   if (amount == 1) {
@@ -119,3 +119,90 @@ console.log(
 // let bookDetails = 'I have 1 novel, 7 textbooks and 2 magazines';
 
 // console.log(bookDetails.replace(/(\d+) (\w+)/g, minusOne));
+
+// GREED
+// ? symbol added to restrict greedy (repeatative) operators like +, *, ?, {}
+// function stripComments(string) {
+//   return string.replace(/\/\/.*|\/\*[^]*?\*\//g, '');
+// }
+
+// console.log(stripComments('x = 1+1; // x = 2'));
+// console.log(stripComments('1 /*a*/+ /* b */2 '));
+
+// Dynamically creating regExp objectts
+
+// let name = 'harry';
+// let text = 'Harry Potter is my favorite character';
+
+// let nameRegExp = new RegExp('\\b(' + name + ')\\b', 'ig');
+// console.log(text.replace(nameRegExp, '_$1_'));
+
+// let name = 'dea+hl[]rd';
+// let text = 'dea+hl[]rd is a very notorious character';
+// let escaped = name.replace(/[+*\\[?{}|^$&]/g, '\\$&');
+// let regExp = new RegExp('\\b' + escaped + '\\b', 'ig');
+
+// console.log(text.replace(regExp, '_$&_'));
+
+// Search (Cannot give search index offset)
+
+// console.log('Amar nam Tahmid'.search(/mid/));  // 12
+// console.log('Amar nam Tahsin'.search(/mid/)); // -1
+
+// let pattern = /y/g;
+// pattern.lastIndex = 3;
+// let string = 'xyxxxy';
+// let match = pattern.exec(string);
+// console.log(match.index);
+// console.log(pattern.lastIndex);
+// let global = /xyz/g;
+// let sticky = /xyz/y;
+
+// console.log(global.exec('abc xyz'));
+// console.log(sticky.exec('abc xyz'));
+
+// let numExp = /\d/g;
+// console.log(numExp.exec('Here is a number: 1'));
+// console.log('Last index', numExp.lastIndex);
+// console.log(numExp.exec('Another num 2'));
+
+// console.log('Banana'.match(/an/g));
+
+// Looping over matches using global and exec and lastIndex
+
+// let input = 'A stiring of 3 numbers containing 23,12';
+// let num = /\b\d+\b/g;
+// let match;
+// while ((match = num.exec(input))) {
+//   console.log('Found', match[0], 'at', match.index);
+// }
+
+// Parsing INI file
+
+function parseINI(string) {
+  let result = {};
+  let section = result;
+  string.split(/\r?\n/).forEach(line => {
+    let match;
+    if ((match = line.match(/^(\w+)=(.*)$/))) {
+      section[match[1]] = match[2];
+    } else if ((match = line.match(/^\[(.*)\]$/))) {
+      section = result[match[1]] = {};
+    } else if (!/^\s*(;.*)?$/.test(line)) {
+      throw new Error('Line ' + line + ' is not valid');
+    }
+  });
+
+  return result;
+}
+
+let iniString =
+  'searchengine=https://duckduckgo.com/?q=$1\nspitefulness=9.7\n; comments are preceded by a semicolon...\n; each section concerns an individual enemy\n[larry]\nfullname=Larry Doe\ntype=kindergarten bully\nwebsite=http://www.geocities.com/CapeCanaveral/11451\n[davaeorn]\nfullname=Davaeorn\ntype=evil wizard\noutputdir=/home/marijn/enemies/davaeorn';
+
+// console.log(parseINI(iniString));
+
+// International characters
+
+console.log(/\p{Script=Bengali}/u.test('আমার নাম তাহমিদ রহমান')); // true
+console.log(/\p{Number}/u.test('12123123')); // true
+console.log(/\p{Alphabetic}/u.test('Abcas')); // true
