@@ -203,6 +203,60 @@ let iniString =
 
 // International characters
 
-console.log(/\p{Script=Bengali}/u.test('আমার নাম তাহমিদ রহমান')); // true
-console.log(/\p{Number}/u.test('12123123')); // true
-console.log(/\p{Alphabetic}/u.test('Abcas')); // true
+// console.log(/\p{Script=Bengali}/u.test('আমার নাম তাহমিদ রহমান')); // true
+// console.log(/\p{Number}/u.test('12123123')); // true
+// console.log(/\p{Alphabetic}/u.test('Abcas')); // true
+
+// RegExp Golf
+
+let catOrCar = /ca[tr]/;
+let popProp = /pr?op/;
+let ferrExp = /ferr(et|y|ari)/;
+let ious = /ious\b/;
+let ws = /\s[.,:;]/;
+let wordWithLength6 = /\b\w{7}\b/;
+let wordWithoutE = /\b[^\We]+\b/i;
+
+// console.log(catOrCar.test('cat'));
+// console.log(catOrCar.test('car'));
+// console.log(popProp.test('prop'));
+// console.log(popProp.test('pop'));
+
+// console.log(ferrExp.test('ferret'));
+// console.log(ferrExp.test('ferry'));
+// console.log(ferrExp.test('ferrari'));
+
+// console.log(ious.test('delicious'));
+// console.log(ious.test('ferocious'));
+// console.log(ws.test(' ,'));
+// console.log(ws.test(' :'));
+
+// console.log(wordWithLength6.test('Somehow'));
+// console.log(wordWithoutE.test('earth bed'));
+
+let quotingStyle = /(^|\W)'|'(\W|$)/g;
+let quotedText = "'I'm the cook,' he said, 'it's my job.'";
+// console.log(quotedText.replace(quotingStyle, '$1"$2'));
+
+let number = /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/;
+
+for (let str of [
+  '1',
+  '-1',
+  '+15',
+  '1.55',
+  '.5',
+  '5.',
+  '1.3e2',
+  '1E-4',
+  '1e+12'
+]) {
+  if (!number.test(str)) {
+    console.log(`Failed to match '${str}'`);
+  }
+}
+for (let str of ['1a', '+-1', '1.2.3', '1+1', '1e4.5', '.5.', '1f5', '.']) {
+  if (number.test(str)) {
+    console.log(`Incorrectly accepted '${str}'`);
+  }
+}
