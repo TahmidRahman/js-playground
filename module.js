@@ -38,4 +38,7 @@ function evalCodeReturnX(code) {
 // Using function constructor to have a separate 'module' scope
 
 let someModule = Function('x', 'return x*2;');
-console.log(someModule(3));
+// console.log(someModule(3));
+
+const { formatDate } = require('./date-formatting');
+console.log(formatDate(new Date(2017, 9, 13), 'dddd the Do'));
