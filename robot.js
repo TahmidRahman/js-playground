@@ -8,11 +8,11 @@ const roads = [
   "Ernie's House-Grete's House",
   "Grete's House-Farm",
   "Grete's House-Shop",
-  "Marketplace-Farm",
-  "Marketplace-Post Office",
-  "Marketplace-Shop",
-  "Marketplace-Town Hall",
-  "Shop-Town Hall"
+  'Marketplace-Farm',
+  'Marketplace-Post Office',
+  'Marketplace-Shop',
+  'Marketplace-Town Hall',
+  'Shop-Town Hall'
 ];
 
 function buildGraph(edges) {
@@ -25,14 +25,14 @@ function buildGraph(edges) {
     }
   }
 
-  for (let [from, to] of edges.map(r => r.split("-"))) {
+  for (let [from, to] of edges.map(r => r.split('-'))) {
     addEdge(from, to);
     addEdge(to, from);
   }
   return graph;
 }
 
-const roadGraph = buildGraph(roads);
+exports.roadGraph = buildGraph(roads);
 
 class VillageState {
   constructor(place, parcels) {
@@ -66,7 +66,7 @@ class VillageState {
 
       parcels.push({ place, address });
     }
-    return new VillageState("Post Office", parcels);
+    return new VillageState('Post Office', parcels);
   }
 }
 
@@ -95,18 +95,18 @@ function randomRobot(state) {
 
 const mailRoute = [
   "Alice's House",
-  "Cabin",
+  'Cabin',
   "Alice's House",
   "Bob's House",
-  "Town Hall",
+  'Town Hall',
   "Daria's House",
   "Ernie's House",
   "Grete's House",
-  "Shop",
+  'Shop',
   "Grete's House",
-  "Farm",
-  "Marketplace",
-  "Post Office"
+  'Farm',
+  'Marketplace',
+  'Post Office'
 ];
 
 function routeRobot(state, memory) {

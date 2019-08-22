@@ -59,5 +59,19 @@ const formatDate = myRequire('./date-formatting.js'); // default import
 
 // console.log(formatDate(new Date(2017, 9, 13), 'dddd the Do'));
 
-const { parse } = require('ini');
-console.log(parse('x=10\ny=10'));
+// const { parse } = require('ini');
+// console.log(parse('x=10\ny=10'));
+
+const { find_path } = require('dijkstrajs');
+const { roadGraph } = require('./robot');
+
+let graph = {};
+
+for (let node of Object.keys(roadGraph)) {
+  let eddges = (graph[node] = {});
+  for (let dest of roadGraph[node]) {
+    eddges[dest] = 1;
+  }
+}
+
+console.log(find_path(graph, 'Post Office', 'Cabin'));
