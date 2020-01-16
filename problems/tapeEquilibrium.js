@@ -16,17 +16,19 @@ function solution(A) {
 
     let cumulativeTotal = 0;
 
-    A.forEach(num => {
-      cumulativeTotal += num;
-      let innerDifference = Math.abs(sum - 2 * cumulativeTotal);
+    A.forEach((num, index) => {
+      if (index != n - 1) {
+        cumulativeTotal += num;
+        let innerDifference = Math.abs(sum - 2 * cumulativeTotal);
 
-      if (innerDifference < min) {
-        min = innerDifference;
+        if (innerDifference < min) {
+          min = innerDifference;
+        }
       }
     });
   }
 
   return min;
 }
-
-console.log(solution([3, 1]));
+console.log(solution([2000, -2000]));
+// console.log(solution([3, 1, 0]));
