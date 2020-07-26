@@ -25,17 +25,22 @@ function requestType(type, handler) {
     }
   });
 }
+const crowNetwork = ['bigOak', 'banyan', 'yarn', 'riverSide'];
 
 function Nest(name) {
   this.name = name;
   this.handlers = Object.create(null);
   this.readStorage = readStorage;
+  this.neighbors = crowNetwork.filter((nestName) => nestName != name);
 
   // install note handler
   this._requestType('note', (nest, content, source, done) => {
     console.log(`${nest.name} received note "${content}" from ${source}`);
     return { crowStatus: 200 };
   });
+
+  // install ping handler
+  this._requestType('ping', () => 'pong');
 
   // unknown type handler
   this._requestType('unkwown', (_, _2, _3, done) => {
@@ -50,27 +55,28 @@ Nest.prototype.send = function (dest, type, content, callback) {
     .catch((failed) => callback(failed));
 };
 
-//nests
-const bigOak = new Nest('bigOak');
-const banyan = new Nest('banyan');
-const crowDNS = [bigOak, banyan];
+const nests = crowNetwork.map((name) => new Nest(name));
 
 function crowFetch(source, dest, type, content, callback) {
-  const target = crowDNS.find((nest) => nest.name == dest);
+  const target = nests.find((nest) => nest.name == dest);
   if (!target) {
     return Promise.reject(new Error(`${dest} not found in crow network`));
   } else {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(target.handlers[type](target, content, source, callback));
-      }, CROW_NETWORK_LATENCY);
+    return new Promise((resolve, reject) => {
+      if (target.handlers[type]) {
+        setTimeout(() => {
+          resolve(target.handlers[type](target, content, source, callback));
+        }, CROW_NETWORK_LATENCY);
+      } else {
+        reject(new Error('Handler not found'));
+      }
     });
   }
 }
 
 class TimeOut extends Error {}
 
-exports.request = function (nest, target, type, content) {
+function request(nest, target, type, content) {
   return new Promise((resolve, reject) => {
     let done = false;
     function attempt(n) {
@@ -94,7 +100,24 @@ exports.request = function (nest, target, type, content) {
     }
     attempt(1);
   });
-};
+}
+
+const [bigOak, banyan] = nests;
 
 exports.bigOak = bigOak;
 exports.banyan = banyan;
+exports.request = request;
+// make riverSide unavailable for ping
+nests[3].handlers.ping = undefined;
+
+exports.pingAllNeighbors = function (nest) {
+  const requests = nest.neighbors.map((neighbor) => {
+    return request(nest, neighbor, 'ping').then(
+      () => true,
+      () => false
+    );
+  });
+  return Promise.all(requests).then((result) => {
+    return nest.neighbors.filter((_, i) => result[i]);
+  });
+};
