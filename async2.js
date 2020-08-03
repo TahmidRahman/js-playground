@@ -4,7 +4,6 @@ const {
   bigOak,
   apple,
   request,
-  routeRequest,
   pingAllNeighbors,
 } = require('./crow-tech');
 
@@ -28,9 +27,9 @@ request(
   'There is a crow wedding 2 kms away of the network'
 );
 
-// Not direct neighbor
+// Not direct neighbor, so it will route the request across network
 // Simple request response
-routeRequest(bigOak, 'apple', 'note', 'Cow if any enemy is in the territory')
+request(bigOak, 'apple', 'note', 'Give some apple for children')
   .then((response) =>
     console.log(
       `Note routed and delivered with response ${JSON.stringify(response)}`

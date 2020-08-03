@@ -93,16 +93,11 @@ Nest.prototype.send = function (target, type, content, callback) {
   const neighborNests = allNests.filter(({ name }) =>
     this.neighbors.includes(name)
   );
-  const destinationNest = neighborNests.find(({ name }) => name == target);
-  if (!destinationNest) {
-    callback(new Error(`${target} not found in neighbors`));
+  const neighborTarget = neighborNests.find(({ name }) => name == target);
+  if (!neighborTarget) {
+    routeRequest(this, target, type, content);
   } else {
-    destinationNest.handlers[type](
-      destinationNest,
-      content,
-      this.name,
-      callback
-    );
+    neighborTarget.handlers[type](neighborTarget, content, this.name, callback);
   }
 };
 
@@ -190,11 +185,11 @@ function broadcastConnections(nest, name, exceptFor = null) {
   }
 }
 
-// everywhere((nest) => {
-//   nest.state.connections = new Map();
-//   nest.state.connections.set(nest.name, nest.neighbors);
-//   broadcastConnections(nest, nest.name);
-// });
+everywhere((nest) => {
+  nest.state.connections = new Map();
+  nest.state.connections.set(nest.name, nest.neighbors);
+  broadcastConnections(nest, nest.name);
+});
 
 function findRoute(from, to, connections) {
   let work = [{ at: from, via: null }];
