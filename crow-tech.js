@@ -61,7 +61,7 @@ const allNests = crowNetwork.map((name) => new Nest(name));
 function everywhere(handler) {
   allNests.forEach(handler);
 }
-Nest.prototype.send = function (dest, type, content, callback) {
+Nest.prototype.delayedSend = function (dest, type, content, callback) {
   const findAndHandleRequest = new Promise((resolve, reject) => {
     // Because each nest has a scope of its neighboring nests
     const neighborNests = allNests.filter(({ name }) =>
@@ -87,6 +87,23 @@ Nest.prototype.send = function (dest, type, content, callback) {
   findAndHandleRequest
     .then((value) => callback(null, value))
     .catch((failed) => callback(failed));
+};
+
+Nest.prototype.send = function (target, type, content, callback) {
+  const neighborNests = allNests.filter(({ name }) =>
+    this.neighbors.includes(name)
+  );
+  const destinationNest = neighborNests.find(({ name }) => name == target);
+  if (!destinationNest) {
+    callback(new Error(`${target} not found in neighbors`));
+  } else {
+    destinationNest.handlers[type](
+      destinationNest,
+      content,
+      this.name,
+      callback
+    );
+  }
 };
 
 class TimeOut extends Error {}
@@ -173,11 +190,11 @@ function broadcastConnections(nest, name, exceptFor = null) {
   }
 }
 
-everywhere((nest) => {
-  nest.state.connections = new Map();
-  nest.state.connections.set(nest.name, nest.neighbors);
-  broadcastConnections(nest, nest.name);
-});
+// everywhere((nest) => {
+//   nest.state.connections = new Map();
+//   nest.state.connections.set(nest.name, nest.neighbors);
+//   broadcastConnections(nest, nest.name);
+// });
 
 function findRoute(from, to, connections) {
   let work = [{ at: from, via: null }];
