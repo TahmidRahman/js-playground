@@ -32,7 +32,7 @@ class Group {
   }
 
   delete(value) {
-    this.members = this.members.filter(v => v !== value);
+    this.members = this.members.filter((v) => v !== value);
   }
 
   has(value) {
@@ -51,6 +51,12 @@ class Group {
     return new GroupIterator(this);
   }
 }
+
+Group.prototype[Symbol.iterator] = function* () {
+  for (let i = 0; i < this.members.length; i++) {
+    yield this.members[i];
+  }
+};
 
 class GroupIterator {
   constructor(group) {
@@ -76,7 +82,12 @@ class GroupIterator {
 
 let obj = {
   a: 4,
-  hasOwnProperty: true
+  hasOwnProperty: true,
 };
 
-console.log(Object.prototype.hasOwnProperty.call(obj, "a"));
+console.log(Object.prototype.hasOwnProperty.call(obj, 'a'));
+// test new iterator : generator function
+console.log(Group.prototype[Symbol.iterator]);
+for (let each of Group.from([1, 2, 3])) {
+  console.log(each);
+}

@@ -1,14 +1,6 @@
 const CROW_NETWORK_LATENCY = 200; // Configure to see effects of retry requests
 const RETRY_REQUEST_DURATION = 500;
 
-function readStorage(name, callback) {
-  if (name == 'enemies') {
-    callback('Ravens');
-  } else {
-    callback('unknown');
-  }
-}
-
 const crowNetwork = ['bigOak', 'banyan', 'yarn', 'sycamore', 'willow', 'apple'];
 
 const crowNeighborGraph = {
@@ -20,11 +12,40 @@ const crowNeighborGraph = {
   apple: ['banyan', 'yarn'],
 };
 
-function Nest(name) {
+const crowStorageGraph = {
+  bigOak: {
+    foodcache: ['worms,ants'],
+    'chicks in 2020': 2,
+    scalpel: 'sycamore',
+  },
+  banyan: {
+    foodcache: ['worms,ants'],
+    enemies: ['ravens', 'hawks'],
+    'chicks in 2020': 4,
+    scalpel: 'willow',
+  },
+  yarn: { foodcache: ['worms,ants'], 'chicks in 2020': 6, scalpel: 'apple' },
+  sycamore: {
+    foodcache: ['worms,ants'],
+    'chicks in 2020': 3,
+    scalpel: 'banyan',
+  },
+  willow: { foodcache: ['worms,ants'], 'chicks in 2020': 2, scalpel: 'yarn' },
+  apple: { foodcache: ['worms,ants'], 'chicks in 2020': 3, scalpel: 'apple' },
+};
+function Nest(name, neighbors, storage) {
   this.name = name;
-
-  this.neighbors = crowNeighborGraph[name];
+  this.neighbors = neighbors;
+  this.storage = storage;
   this.state = {};
+
+  this.readStorage = function (name, callback) {
+    if (this.storage.hasOwnProperty(name)) {
+      Promise.resolve(this.storage[name]).then(callback);
+    } else {
+      Promise.resolve(null).then(callback);
+    }
+  };
 }
 
 function defineRequestType(type, handler) {
@@ -50,13 +71,14 @@ function requestType(type, handler) {
 // install note handler
 requestType('note', (nest, content, source, done) => {
   console.log(`${nest.name} received note "${content}" from ${source}`);
-  return { received: true };
 });
 
 // install ping handler
 requestType('ping', () => 'pong');
 
-const allNests = crowNetwork.map((name) => new Nest(name));
+const allNests = crowNetwork.map(
+  (name) => new Nest(name, crowNeighborGraph[name], crowStorageGraph[name])
+);
 
 function everywhere(handler) {
   allNests.forEach(handler);
@@ -95,7 +117,7 @@ Nest.prototype.send = function (target, type, content, callback) {
   );
   const neighborTarget = neighborNests.find(({ name }) => name == target);
   if (!neighborTarget) {
-    routeRequest(this, target, type, content);
+    routeRequest(this, target, type, content).then(callback);
   } else {
     neighborTarget.handlers[type](neighborTarget, content, this.name, callback);
   }
@@ -222,4 +244,113 @@ requestType('route', (nest, { target, type, content }) =>
   routeRequest(nest, target, type, content)
 );
 
-exports.routeRequest = routeRequest;
+function storage(nest, name) {
+  return new Promise((resolve) => {
+    nest.readStorage(name, (result) => resolve(result));
+  });
+}
+
+requestType('storage', (nest, name) => storage(nest, name));
+
+async function findInStorage(nest, name) {
+  const local = await storage(nest, name);
+  if (local != null) {
+    return local;
+  }
+  let sources = Array.from(nest.state.connections.keys());
+  while (sources.length > 0) {
+    let source = sources[Math.floor(Math.random() * sources.length)];
+    console.log(`Now searching ${source} in ${sources}`);
+    sources = sources.filter((n) => n != source);
+    try {
+      const value = await routeRequest(nest, source, 'storage', name);
+      if (value != null) {
+        return value;
+      }
+    } catch (_) {}
+  }
+  throw new Error('Not found');
+}
+
+exports.findInStorage = findInStorage;
+
+function network(nest) {
+  return Array.from(nest.state.connections.keys());
+}
+
+function findInRemoteStorage(nest, name) {
+  let sources = network(nest).filter((n) => n != nest.name);
+  function next() {
+    if (sources.length == 0) {
+      return Promise.reject(new Error('Not found'));
+    } else {
+      let source = sources[Math.floor(Math.random() * sources.length)];
+      sources = sources.filter((n) => n != source);
+      return routeRequest(nest, source, 'storage', name).then(
+        (value) => (value != null ? value : next()),
+        next
+      );
+    }
+  }
+
+  return next();
+}
+
+function anyStorage(nest, source, name) {
+  if (nest.name === source) return storage(nest, name);
+  else return routeRequest(nest, source, 'storage', name);
+}
+
+//  FAULTY CODE
+//
+// async function chicks(nest, year) {
+//   let list = '';
+//   await Promise.all(
+//     network(nest).map(async (name) => {
+//       list += `${name}: ${await anyStorage(nest, name, `chicks in ${year}`)}`;
+//     })
+//   );
+//   return list;
+// }
+
+// CORRECT CODE TO GET INTENDED RESULT
+async function chicks(nest, year) {
+  let lines = network(nest).map(
+    async (name) =>
+      `${name}: ${await anyStorage(nest, name, `chicks in ${year}`)}`
+  );
+
+  return (await Promise.all(lines)).join('\n');
+}
+
+chicks(bigOak, 2020).then(console.log);
+
+// Exercise 1
+
+async function locateSlalpel(nest) {
+  let currentLocation = nest.name;
+  let found = false;
+  while (!found) {
+    let nextLocation = await anyStorage(nest, currentLocation, 'scalpel');
+    if (currentLocation === nextLocation) {
+      found = true;
+    }
+    currentLocation = nextLocation;
+  }
+  return currentLocation;
+}
+
+function locateSlalpel2(nest) {
+  function findNextLocation(currentLocation) {
+    return anyStorage(nest, currentLocation, 'scalpel').then((nextLocation) => {
+      if (nextLocation !== currentLocation) {
+        return findNextLocation(nextLocation);
+      } else {
+        return nextLocation;
+      }
+    });
+  }
+  return findNextLocation(nest.name);
+}
+
+locateSlalpel(bigOak).then(console.log).catch(console.error);
