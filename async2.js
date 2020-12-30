@@ -5,6 +5,7 @@ const {
   apple,
   request,
   pingAllNeighbors,
+  findInStorage,
 } = require('./crow-tech');
 
 // Simple request response
@@ -36,3 +37,7 @@ request(bigOak, 'apple', 'note', 'Give some apple for children')
     )
   )
   .catch((error) => console.log(error.message));
+
+findInStorage(bigOak, 'enemies').then(
+  (value) => console.log(`Found enemies ${value}`) // We know bigOak does not have enemies entry, it fetches from other nest
+);
