@@ -16,7 +16,7 @@ function merge(arrayA, arrayB) {
   while (arrayA.length > 0 && arrayB.length > 0) {
     if (arrayA[0] > arrayB[0]) {
       sortedArray.push(arrayB.shift());
-    } else if (arrayB[0] > arrayA[0]) {
+    } else if (arrayB[0] >= arrayA[0]) {
       sortedArray.push(arrayA.shift());
     }
   }
@@ -32,4 +32,4 @@ function merge(arrayA, arrayB) {
   return sortedArray;
 }
 
-console.log(mergeSort([3, 4, 1, 6, 8, 24, 2, 5]));
+console.log(mergeSort([3, 4, 1, 6, 8, 24, 2, 5, 5]));
