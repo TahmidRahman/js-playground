@@ -27,7 +27,7 @@ function showErrorText(
 exports.expect = function (value) {
   return {
     toBe: (expectedValue) => {
-      if (value === expectedValue) {
+      if (value == expectedValue) {
         showTestPassedText();
       } else {
         showErrorText(value, expectedValue);
@@ -39,6 +39,6 @@ exports.expect = function (value) {
       } else {
         showErrorText(value, expectedValue);
       }
-    },
+    }
   };
 };
