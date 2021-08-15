@@ -15,9 +15,8 @@ function parseExpression(program) {
 }
 
 function skipSpace(string) {
-  let first = string.search(/\S/);
-  if (first == -1) return '';
-  return string.slice(first);
+  let skippable = string.match(/^(\s|#.*)*/);
+  return string.slice(skippable[0].length);
 }
 
 function parseApply(expr, program) {
@@ -113,6 +112,25 @@ specialForms.define = (args, scope) => {
   }
   let value = evaluate(args[1], scope);
   scope[args[0].name] = value;
+  return value;
+};
+
+specialForms.set = (args, env) => {
+  if (args.length != 2 || args[0].type != 'word') {
+    throw new SyntaxError('Invalid call of set');
+  }
+
+  let name = args[0].name;
+  let value = evaluate(args[1], env);
+  if (!(name in env)) {
+    throw new ReferenceError(`${name} is not defined`);
+  }
+  let scope = env;
+  while (!Object.prototype.hasOwnProperty.call(scope, name)) {
+    scope = Object.getPrototypeOf(scope);
+  }
+
+  scope[name] = value;
   return value;
 };
 
@@ -214,5 +232,42 @@ run(`
     define(arr,array(1,2,3)),
     print(length(arr)),
     print(element(arr,0))
+  )
+`);
+
+run(`
+  do(
+    define(f,fun(a,fun(b,+(a,b)))),
+    print(f(4)(5))
+  )
+`);
+
+run(`
+  do(
+    define(a,10),
+    define(f,fun(
+      do(
+        define(a,5),
+        set(a,+(a,1)),
+        +(a,5)
+      )
+      )),
+    print("Should return 11"),
+    print(f())
+  )
+`);
+
+run(`
+  # comment test
+  do(
+    define(a,10),
+    define(f,fun(
+      do(
+        set(a,+(a,1)),
+        +(a,5)
+      )
+      )),
+    print("Should return 16"),
+    print(f())
   )
 `);
