@@ -122,16 +122,18 @@ specialForms.set = (args, env) => {
 
   let name = args[0].name;
   let value = evaluate(args[1], env);
-  if (!(name in env)) {
-    throw new ReferenceError(`${name} is not defined`);
-  }
+
   let scope = env;
-  while (!Object.prototype.hasOwnProperty.call(scope, name)) {
+  while (scope && !Object.prototype.hasOwnProperty.call(scope, name)) {
     scope = Object.getPrototypeOf(scope);
   }
 
-  scope[name] = value;
-  return value;
+  if (scope) {
+    scope[name] = value;
+    return value;
+  } else {
+    throw new ReferenceError(`${name} is not defined`);
+  }
 };
 
 specialForms.fun = (args, scope) => {
