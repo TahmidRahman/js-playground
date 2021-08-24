@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>If you go chasing <span class="animal">rabbits</span></p>
+    <p>And you know you're going to fall</p>
+    <p>
+      Tell'em a
+      <span class="character"
+        >hookka smoking <span class="animal">caterpilar</span>
+      </span>
+    </p>
+    <p>Has given you call</p>
+    <script>
+      function count(selector) {
+        return document.querySelectorAll(selector).length;
+      }
+
+      console.log(count('p'));
+      console.log(count('.animal'));
+      console.log(count('p .animal'));
+      console.log(count('p > .animal'));
+    </script>
+  </body>
+</html>

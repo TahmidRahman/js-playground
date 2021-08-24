@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      strong {
+        font-style: italic;
+        color: grey;
+      }
+    </style>
+    <p><a href=".">Normal text</a></p>
+    <p><a href="." style="color: green">Styled text</a></p>
+    <p>
+      The text is displayed <strong>inline</strong>,
+      <strong style="display: block">As a block</strong>, and
+      <strong style="display: none">Not at all</strong>.
+    </p>
+    <p id="nice" style="color: purple">Nice text</p>
+    <script>
+      let para = document.getElementById('nice');
+      para.style.color = 'magenta';
+      para.style.fontFamily = 'arial';
+    </script>
+  </body>
+</html>

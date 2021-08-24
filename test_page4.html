@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p data-classified="secret" class="heyo">Secret code 00000</p>
+    <p data-classified="unclassified" class="oyo">This should stay</p>
+
+    <script>
+      let paras = document.body.getElementsByTagName('p');
+      for (let para of Array.from(paras)) {
+        if (para.getAttribute('data-classified') == 'secret') {
+          para.remove();
+        }
+      }
+    </script>
+  </body>
+</html>

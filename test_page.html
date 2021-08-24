@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My home page</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>My home page</h1>
+    <p>I am Tahmid! This is my home page</p>
+    <p>
+      I also read a book! You can also read it from
+      <a href="https://eloquentjavascript.net/">here</a>
+    </p>
+    <img src="images/chicken.png" alt="chicken" id="chicken" />
+    <p class="order">One</p>
+    <p class="order">Two</p>
+    <p class="order">Three</p>
+
+    <script>
+      let img = document.getElementById('chicken');
+      console.log(img.src);
+      let orders = document.body.getElementsByClassName('order');
+      document.body.insertBefore(orders[2], orders[0]);
+      document.body.replaceChild(orders[0], orders[2]);
+    </script>
+  </body>
+</html>
