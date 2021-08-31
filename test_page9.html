@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <img id="cat" src="images/cat.png" style="position: absolute" />
+    <img id="dog" src="images/dog.png" style="position: absolute" />
+
+    <script>
+      let cat = document.querySelector('#cat');
+      let dog = document.querySelector('#dog');
+      let angle = Math.PI / 2;
+      function animate(time, lastTime) {
+        if (lastTime != null) {
+          angle += (time - lastTime) * 0.001;
+        }
+        cat.style.top = Math.sin(angle) * 20 + 40 + 'px';
+        cat.style.left = Math.cos(angle) * 200 + 200 + 'px';
+
+        dog.style.top = Math.sin(angle + Math.PI) * 20 + 40 + 'px';
+        dog.style.left = Math.cos(angle + Math.PI) * 200 + 200 + 'px';
+
+        requestAnimationFrame((newTime) => animate(newTime, time));
+      }
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>
