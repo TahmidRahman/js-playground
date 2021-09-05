@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="regular">Click me</button>
+    <p>No handler here</p>
+    <button id="once">Once event button</button>
+    <script>
+      let button = document.querySelector('button#regular');
+      let onceButton = document.querySelector('button#once');
+      button.addEventListener('click', function () {
+        console.log('you clicked on button!');
+      });
+      button.addEventListener('click', function () {
+        console.log('heyo! another listener!');
+      });
+      function once() {
+        console.log('Once handler fired');
+        onceButton.removeEventListener('click', once);
+      }
+      onceButton.addEventListener('click', once);
+    </script>
+  </body>
+</html>

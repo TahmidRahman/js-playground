@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      style="
+        height: 50px;
+        width: 50px;
+        background-color: red;
+        border-radius: 50%;
+        position: relative;
+      "
+    ></div>
+    <script>
+      let ball = document.body.querySelector('div');
+      let stopTime;
+      let dx = 0;
+      function animate(time, lastTime) {
+        if (!lastTime) stopTime = time + 5 * 1000;
+        else dx += (time - lastTime) * 0.012;
+
+        ball.style.top = Math.log2(dx) * 50 + 'px';
+        ball.style.left = dx * 5 + 'px';
+        if (dx * 5 + 50 < innerWidth) {
+          requestAnimationFrame((newTime) => animate(newTime, time));
+        }
+      }
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>

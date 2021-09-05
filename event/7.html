@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>This page turns violet when you hold the v button</p>
+    <script>
+      window.addEventListener('keydown', function (event) {
+        if (event.key == 'v' && event.ctrlKey) {
+          document.body.style.background = 'violet';
+        }
+      });
+
+      window.addEventListener('keyup', function (event) {
+        if (event.key == 'v' && event.ctrlKey) {
+          document.body.style.background = '';
+        }
+      });
+    </script>
+  </body>
+</html>

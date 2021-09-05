@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let called = 0;
+      let start = Date.now();
+      function animate(time) {
+        ++called;
+        if (Date.now() - start < 1000) {
+          requestAnimationFrame(animate);
+        } else {
+          console.log(`Animate called ${called} times in 1 second`);
+        }
+      }
+      requestAnimationFrame(animate);
+    </script>
+  </body>
+</html>

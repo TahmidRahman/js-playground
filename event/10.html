@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      dot {
+        position: absolute;
+        display: block;
+        border: 2px solid red;
+        border-radius: 50px;
+        height: 100px;
+        width: 100px;
+      }
+    </style>
+    <script>
+      function update(event) {
+        for (let dot; (dot = document.querySelector('dot')); ) {
+          dot.remove();
+        }
+        for (let i = 0; i < event.touches.length; i++) {
+          let dot = document.createElement('dot');
+          let { clientX, clientY } = event.touches[i];
+          dot.style.left = clientX - 50 + 'px';
+          dot.style.top = clientY - 50 + 'px';
+          document.body.appendChild(dot);
+        }
+        event.preventDefault();
+      }
+
+      window.addEventListener('touchstart', update);
+      window.addEventListener('touchmove', update);
+      window.addEventListener('touchend', update);
+    </script>
+  </body>
+</html>

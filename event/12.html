@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>Name: <input type="text" data-help="Your full name" /></p>
+    <p>Age: <input type="text" data-help="Your age in years" /></p>
+    <p id="help"></p>
+    <script>
+      let help = document.querySelector('#help');
+      let inputs = document.querySelectorAll('input');
+      for (let i = 0; i < inputs.length; i++) {
+        let field = inputs[i];
+        field.addEventListener('focus', (event) => {
+          let helpText = event.target.getAttribute('data-help');
+          help.textContent = helpText;
+        });
+        field.addEventListener('blur', () => {
+          help.textContent = '';
+        });
+      }
+      // window.addEventListener('focus', () => {
+      //   console.log('window focused');
+      // });
+      // window.addEventListener('blur', () => {
+      //   console.log('window blurred');
+      // });
+
+      // window.addEventListener('load', () => {
+      //   console.log('Loaded');
+      // });
+      // window.addEventListener('beforeunload', (event) => {
+      //   // To show leave site confirmation dialog
+      //   event.returnValue = 'something';
+      // });
+    </script>
+  </body>
+</html>

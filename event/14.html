@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // let bomb = setTimeout(() => {
+      //   console.log('boom!');
+      // }, 500);
+      // if (Math.random() > 0.5) {
+      //   console.log('defused!');
+      //   clearTimeout(bomb);
+      // }
+      let ticks = 0;
+      let clock = setInterval(() => {
+        console.log('tick', ticks++);
+        if (ticks == 10) {
+          clearInterval(clock);
+          console.log('Stop!');
+        }
+      }, 200);
+    </script>
+  </body>
+</html>

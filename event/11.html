@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      #progress {
+        width: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        border-bottom: 2px solid blue;
+      }
+    </style>
+    <div id="progress"></div>
+    <script>
+      document.body.appendChild(
+        document.createTextNode(
+          'asdhaskdhkashdkjhaskjdhakjsdhkashd  '.repeat(1000)
+        )
+      );
+      let progress = document.querySelector('#progress');
+      window.addEventListener('scroll', () => {
+        let max = document.body.scrollHeight - innerHeight;
+        width = `${(pageYOffset / max) * 100}%`;
+        progress.style.width = width;
+      });
+    </script>
+  </body>
+</html>
