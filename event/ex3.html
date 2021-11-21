@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <tab-panel>
+      <div data-tabname="one">Tab one</div>
+      <div data-tabname="two">Tab two</div>
+      <div data-tabname="three">Tab three</div>
+    </tab-panel>
+  </body>
+  <script>
+    function asTabs(node) {
+      let buttonContainer = document.createElement('div');
+      let tabs = Array.from(node.children);
+      node.insertBefore(buttonContainer, node.firstChild);
+      let buttons = [];
+
+      function styleTabAndButton(button, tab, selected) {
+        if (selected) {
+          button.style.background = 'red';
+          tab.style.display = '';
+        } else {
+          button.style.background = '';
+          tab.style.display = 'none';
+        }
+      }
+
+      function selectTab(index) {
+        for (let j = 0; j < tabs.length; j++) {
+          styleTabAndButton(buttons[j], tabs[j], index === j);
+        }
+      }
+
+      for (let i = 0; i < tabs.length; i++) {
+        let tab = tabs[i];
+        if (tab.getAttribute('data-tabname')) {
+          let button = document.createElement('button');
+          button.textContent = tab.getAttribute('data-tabname');
+          buttonContainer.appendChild(button);
+          button.addEventListener('click', (event) => {
+            selectTab(i);
+          });
+          buttons.push(button);
+        }
+      }
+      selectTab(0);
+    }
+    asTabs(document.querySelector('tab-panel'));
+  </script>
+</html>
