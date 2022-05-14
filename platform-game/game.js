@@ -105,7 +105,7 @@ class Lava {
   }
 }
 
-Lava.prototype, (size = new Vec(1, 1));
+Lava.prototype.size = new Vec(1, 1);
 
 class Coin {
   constructor(pos, basePos, wobble) {
@@ -137,8 +137,6 @@ const levelChars = {
   v: Lava
 };
 
-let simpleLevel = new Level(simpleLevelPlan);
-
 function elt(name, attrs, ...children) {
   let dom = document.createElement(name);
   for (let attr of Object.keys(attrs)) {
@@ -160,6 +158,41 @@ class DOMDisplay {
     this.dom.remove();
   }
 }
+
+DOMDisplay.prototype.syncState = function (state) {
+  if (this.actorLayer) this.actorLayer.remove();
+  this.actorLayer = drawActors(state.actors);
+  this.dom.appendChild(this.actorLayer);
+  this.dom.className = `game ${state.status}`;
+  this.scrollPlayerIntoView(state);
+};
+
+DOMDisplay.prototype.scrollPlayerIntoView = function (state) {
+  let width = this.dom.clientWidth;
+  let height = this.dom.clientHeight;
+
+  let margin = width / 3;
+
+  // The viewport
+  let left = this.dom.scrollLeft,
+    right = left + width;
+  let top = this.dom.scrollTop,
+    bottom = top + height;
+
+  let player = state.player;
+  let center = player.pos.plus(player.size.times(0.5)).times(scale);
+
+  if (center.x < left + margin) {
+    this.dom.scrollLeft = center.x - margin;
+  } else if (center.x > right - margin) {
+    this.dom.scrollLeft = center.x + margin - width;
+  }
+  if (center.y < top + margin) {
+    this.dom.scrollTop = center.y - margin;
+  } else if (center.y > bottom - margin) {
+    this.dom.scrollTop = center.y + margin - height;
+  }
+};
 
 const scale = 20;
 
@@ -194,3 +227,7 @@ function drawActors(actors) {
     })
   );
 }
+
+let simpleLevel = new Level(simpleLevelPlan);
+let display = new DOMDisplay(document.body, simpleLevel);
+display.syncState(State.start(simpleLevel));
