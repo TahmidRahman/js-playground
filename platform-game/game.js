@@ -332,6 +332,10 @@ function trackKeys(keys) {
   }
   window.addEventListener('keydown', track);
   window.addEventListener('keyup', track);
+  down.unregister = function () {
+    window.removeEventListener('keydown', track);
+    window.removeEventListener('keyup', track);
+  };
   return down;
 }
 
@@ -348,16 +352,26 @@ function runAnimation(frameFunc) {
   requestAnimationFrame(frame);
 }
 
-const arrowKeys = trackKeys(['ArrowLeft', 'ArrowRight', 'ArrowUp']);
-
 function runLevel(level, Display) {
   let display = new Display(document.body, level);
   let state = State.start(level);
   let ending = 1;
+  let paused = false;
+  let pausedAt = null;
+  const arrowKeys = trackKeys(['ArrowLeft', 'ArrowRight', 'ArrowUp']);
+  function escapeHandler(event) {
+    if (event.key == 'Escape') {
+      paused = !paused;
+    }
+  }
+  window.addEventListener('keydown', escapeHandler);
   return new Promise((resolve) => {
     runAnimation((time) => {
-      state = state.update(time, arrowKeys);
-      display.syncState(state);
+      if (!paused) {
+        state = state.update(pausedAt || time, arrowKeys);
+        display.syncState(state);
+        pausedAt = time;
+      }
       if (state.status == 'playing') {
         return true;
       } else if (ending > 0) {
@@ -366,6 +380,8 @@ function runLevel(level, Display) {
       } else {
         display.clear();
         resolve(state.status);
+        arrowKeys.unregister();
+        window.removeEventListener(escapeHandler);
         return false;
       }
     });
