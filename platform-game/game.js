@@ -357,21 +357,31 @@ function runLevel(level, Display) {
   let state = State.start(level);
   let ending = 1;
   let paused = false;
-  let pausedAt = null;
-  const arrowKeys = trackKeys(['ArrowLeft', 'ArrowRight', 'ArrowUp']);
-  function escapeHandler(event) {
-    if (event.key == 'Escape') {
-      paused = !paused;
-    }
-  }
-  window.addEventListener('keydown', escapeHandler);
+  let running = 'yes';
+
   return new Promise((resolve) => {
-    runAnimation((time) => {
-      if (!paused) {
-        state = state.update(pausedAt || time, arrowKeys);
-        display.syncState(state);
-        pausedAt = time;
+    function escHandler(event) {
+      if (event.key != 'Escape') return;
+      event.preventDefault();
+      if (running == 'no') {
+        running = 'yes';
+        runAnimation(frame);
+      } else if (running == 'yes') {
+        running = 'pausing';
+      } else {
+        running = 'yes';
       }
+    }
+    window.addEventListener('keydown', escHandler);
+    const arrowKeys = trackKeys(['ArrowLeft', 'ArrowRight', 'ArrowUp']);
+
+    function frame(time) {
+      if (running == 'pausing') {
+        running = 'no';
+        return false;
+      }
+      state = state.update(time, arrowKeys);
+      display.syncState(state);
       if (state.status == 'playing') {
         return true;
       } else if (ending > 0) {
@@ -381,10 +391,11 @@ function runLevel(level, Display) {
         display.clear();
         resolve(state.status);
         arrowKeys.unregister();
-        window.removeEventListener(escapeHandler);
+        window.removeEventListener('keydown', escHandler);
         return false;
       }
-    });
+    }
+    runAnimation(frame);
   });
 }
 
