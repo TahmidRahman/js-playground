@@ -26,6 +26,10 @@
   background: rgb(64, 64, 64);
 }
 
+.monster {
+  background: rgb(255, 0, 0);
+}
+
 .lost .player {
   background: rgb(160, 64, 64);
 }

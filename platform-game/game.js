@@ -1,8 +1,8 @@
 let simpleLevelPlan = `
 ......................
 ..#................#..
-..#..............=.#..
-..#.........o.o....#..
+..#..........m...=.#..
+..#.........o.o....#.
 ..#.@......#####...#..
 ..#####............#..
 ......#++++++++++++#..
@@ -220,6 +220,42 @@ Coin.prototype.update = function (time) {
     wobble
   );
 };
+class Monster {
+  constructor(pos, speed) {
+    this.pos = pos;
+    this.speed = speed;
+  }
+
+  get type() {
+    return 'monster';
+  }
+
+  static create(pos) {
+    return new Monster(pos, new Vec(1.5, 0));
+  }
+}
+
+Monster.prototype.size = new Vec(2, 2);
+Monster.prototype.update = function (time, state) {
+  var newPos = this.pos.plus(this.speed.times(time));
+  if (!state.level.touches(newPos, this.size, 'wall'))
+    return new Monster(newPos, this.speed);
+  else return new Monster(this.pos, this.speed.times(-1));
+};
+
+Monster.prototype.collide = function (state) {
+  const player = state.actors.find((actor) => actor.type == 'player');
+
+  if (
+    player.pos.y + player.size.y > this.pos.y &&
+    player.pos.y < this.pos.y + this.size.y
+  ) {
+    const filteredActors = state.actors.filter((actor) => actor != this);
+    return new State(state.level, filteredActors, state.status);
+  }
+  return new State(state.level, state.actors, 'lost');
+};
+
 const levelChars = {
   '.': 'empty',
   '#': 'wall',
@@ -228,7 +264,8 @@ const levelChars = {
   '@': Player,
   '+': 'lava',
   '|': Lava,
-  v: Lava
+  v: Lava,
+  m: Monster
 };
 
 function elt(name, attrs, ...children) {
