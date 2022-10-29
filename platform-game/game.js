@@ -1,7 +1,7 @@
 let simpleLevelPlan = `
 ......................
-..#................#..
-..#..........m...=.#..
+..#........M.......#..
+..#..............=.#..
 ..#.........o.o....#.
 ..#.@......#####...#..
 ..#####............#..
@@ -220,10 +220,11 @@ Coin.prototype.update = function (time) {
     wobble
   );
 };
+
+const monsterSpeed = 4;
 class Monster {
-  constructor(pos, speed) {
+  constructor(pos) {
     this.pos = pos;
-    this.speed = speed;
   }
 
   get type() {
@@ -231,30 +232,28 @@ class Monster {
   }
 
   static create(pos) {
-    return new Monster(pos, new Vec(1.5, 0));
+    return new Monster(pos.plus(new Vec(0, -1)));
+  }
+
+  update(time, state) {
+    const player = state.player;
+    const speed = (player.pos.x < this.pos.x ? -1 : 1) * time * monsterSpeed;
+    const newPos = new Vec(this.pos.x + speed, this.pos.y);
+    if (state.level.touches(newPos, this.size, 'wall')) return this;
+    else return new Monster(newPos);
+  }
+
+  collide(state) {
+    const player = state.player;
+    if (player.pos.y + player.size.y < this.pos.y + 0.5) {
+      const filteredActors = state.actors.filter((actor) => actor != this);
+      return new State(state.level, filteredActors, state.status);
+    }
+    return new State(state.level, state.actors, 'lost');
   }
 }
 
-Monster.prototype.size = new Vec(2, 2);
-Monster.prototype.update = function (time, state) {
-  var newPos = this.pos.plus(this.speed.times(time));
-  if (!state.level.touches(newPos, this.size, 'wall'))
-    return new Monster(newPos, this.speed);
-  else return new Monster(this.pos, this.speed.times(-1));
-};
-
-Monster.prototype.collide = function (state) {
-  const player = state.actors.find((actor) => actor.type == 'player');
-
-  if (
-    player.pos.y + player.size.y > this.pos.y &&
-    player.pos.y < this.pos.y + this.size.y
-  ) {
-    const filteredActors = state.actors.filter((actor) => actor != this);
-    return new State(state.level, filteredActors, state.status);
-  }
-  return new State(state.level, state.actors, 'lost');
-};
+Monster.prototype.size = new Vec(1.2, 2);
 
 const levelChars = {
   '.': 'empty',
@@ -265,7 +264,7 @@ const levelChars = {
   '+': 'lava',
   '|': Lava,
   v: Lava,
-  m: Monster
+  M: Monster
 };
 
 function elt(name, attrs, ...children) {
@@ -393,7 +392,6 @@ function runLevel(level, Display) {
   let display = new Display(document.body, level);
   let state = State.start(level);
   let ending = 1;
-  let paused = false;
   let running = 'yes';
 
   return new Promise((resolve) => {
@@ -449,4 +447,21 @@ async function runGame(plans, Display) {
 }
 
 const GAME_LEVELS = [simpleLevelPlan];
-runGame(GAME_LEVELS, DOMDisplay);
+// runGame(GAME_LEVELS, DOMDisplay);
+runLevel(
+  new Level(`
+..................................
+.################################.
+.#..............................#.
+.#..............................#.
+.#..............................#.
+.#...........................o..#.
+.#..@...........................#.
+.##########..............########.
+..........#..o..o..o..o..#........
+..........#...........M..#........
+..........################........
+..................................
+`),
+  DOMDisplay
+);
