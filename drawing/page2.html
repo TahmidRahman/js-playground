@@ -8,13 +8,74 @@
   </head>
   <body>
     <p>Before canvas</p>
-    <canvas height="80" width="120"></canvas>
+    <canvas id="c1" height="140" width="200"></canvas>
     <p>After canvas</p>
+    <p>Paths</p>
+    <canvas id="c2"></canvas>
+    <canvas id="c3"></canvas>
+    <p>Curves</p>
+    <canvas id="c4"></canvas>
+    <canvas id="c5"></canvas>
+    <canvas id="c6"></canvas>
     <script>
-      const canvas = document.querySelector('canvas');
-      const context = canvas.getContext('2d');
-      context.fillStyle = 'red';
-      context.fillRect(10, 10, 100, 60);
+      function getContextOfCanvas(cid) {
+        return document.querySelector(`#${cid}`).getContext('2d');
+      }
+      let ctx = getContextOfCanvas('c1');
+      ctx.fillStyle = 'red';
+      ctx.fillRect(10, 10, 100, 60);
+      ctx.strokeStyle = 'blue';
+      ctx.strokeRect(10, 80, 50, 50);
+      ctx.lineWidth = 5;
+      ctx.strokeRect(135, 80, 50, 50);
+      ctx = getContextOfCanvas('c2');
+      ctx.beginPath();
+      for (let y = 10; y < 100; y += 10) {
+        ctx.moveTo(10, y);
+        ctx.lineTo(90, y);
+      }
+      ctx.stroke();
+      ctx = getContextOfCanvas('c3');
+      ctx.beginPath();
+      ctx.moveTo(50, 10);
+      ctx.lineTo(10, 70);
+      ctx.lineTo(90, 70);
+      ctx.closePath();
+      ctx.lineTo(50, 70);
+      ctx.fillStyle = 'green';
+      ctx.strokeStyle = 'blue';
+      ctx.lineWidth = 3;
+      ctx.fill();
+      ctx.stroke();
+      ctx = getContextOfCanvas('c4');
+      ctx.beginPath();
+      ctx.moveTo(10, 90);
+      // control=60,10; goal=90,90
+      ctx.quadraticCurveTo(60, 10, 90, 90);
+      ctx.lineTo(60, 10);
+      ctx.fillStyle = 'yellow';
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx = getContextOfCanvas('c5');
+      ctx.beginPath();
+      ctx.moveTo(10, 90);
+      // control1=10,10; control2= 90,10; goal=50,90
+      ctx.bezierCurveTo(10, 10, 90, 10, 50, 90);
+      ctx.lineTo(90, 10);
+      ctx.lineTo(10, 10);
+      ctx.closePath();
+      ctx.fillStyle = 'lime';
+      ctx.fill();
+      ctx.stroke();
+      ctx = getContextOfCanvas('c6');
+      ctx.beginPath();
+      // center=50,50 radius=40 angle = 0 to 7
+      ctx.arc(50, 50, 40, 0, 7);
+      // center=150,50, radius=40 angle=0, 1/2 pi
+      ctx.moveTo(190, 50); // to un-draw connecting path
+      ctx.arc(150, 50, 40, 0, 0.5 * Math.PI);
+      ctx.stroke();
     </script>
   </body>
 </html>
