@@ -10,13 +10,19 @@
     <p>Before canvas</p>
     <canvas id="c1" height="140" width="200"></canvas>
     <p>After canvas</p>
-    <p>Paths</p>
+    <h3>Paths</h3>
     <canvas id="c2"></canvas>
     <canvas id="c3"></canvas>
-    <p>Curves</p>
+    <h3>Curves</h3>
     <canvas id="c4"></canvas>
     <canvas id="c5"></canvas>
     <canvas id="c6"></canvas>
+    <h3>Text</h3>
+    <canvas id="c7"></canvas>
+    <h3>Image</h3>
+    <canvas id="c8" width="1000" height="330"></canvas>
+    <h3>Another Image</h3>
+    <canvas id="c9"></canvas>
     <script>
       function getContextOfCanvas(cid) {
         return document.querySelector(`#${cid}`).getContext('2d');
@@ -76,6 +82,33 @@
       ctx.moveTo(190, 50); // to un-draw connecting path
       ctx.arc(150, 50, 40, 0, 0.5 * Math.PI);
       ctx.stroke();
+      ctx = getContextOfCanvas('c7');
+      ctx.beginPath();
+      ctx.moveTo(10, 50);
+      ctx.lineTo(28 * 0.6 * 9, 50);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+      ctx.font = '28px Georgia';
+      ctx.fillStyle = 'fuchsia';
+      ctx.fillText('Text test', 10, 50);
+      ctx.fill();
+      ctx = getContextOfCanvas('c8');
+      const img = document.createElement('img');
+      img.src = './safety_pin.png';
+      let imgWidth = 220;
+      let imgHeight = 200;
+      let ctx2 = getContextOfCanvas('c9');
+      img.addEventListener('load', () => {
+        for (
+          let x = 10, size = 0.5;
+          x < 660;
+          x += imgWidth * size + 10, size += 0.3
+        ) {
+          ctx.drawImage(img, x, 0, imgWidth * size, imgHeight * size);
+        }
+        ctx2.drawImage(img, 140, 0, 80, 80, 0, 0, 80, 80);
+      });
     </script>
   </body>
 </html>
