@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>Mirror Example</h3>
+    <canvas width="600" height="400"></canvas>
+    <script>
+      let cx = document.querySelector('canvas').getContext('2d');
+      cx.beginPath();
+      cx.translate(300, 200);
+      cx.font = '14px Arial';
+      cx.fillText('x - axis', -300, -10);
+      cx.moveTo(-300, 0);
+      cx.lineTo(300, 0);
+      cx.fillText('y - axis', -50, -180);
+      cx.moveTo(0, -200);
+      cx.lineTo(0, 200);
+      cx.moveTo(70, -50);
+      cx.arc(50, -50, 20, 0, 2 * Math.PI);
+      cx.font = '8px Arial';
+      cx.fillText('up cirlcle', 35, -50);
+      cx.scale(-1, 1);
+      cx.moveTo(70, -50);
+      cx.arc(50, -50, 20, 0, 2 * Math.PI);
+      cx.fillText('up cirlcle', 35, -50);
+      cx.stroke();
+    </script>
+  </body>
+</html>
