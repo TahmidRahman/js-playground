@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Empty Canvas</title>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+  </body>
+  <script>
+    const canvas = document.getElementById('myCanvas');
+    const cx = canvas.getContext('2d');
+    cx.beginPath();
+    cx.lineWidth = 5;
+    cx.moveTo(200, 200);
+    cx.arc(200, 200, 100, (3 * Math.PI) / 4, (3 * Math.PI) / 2);
+    cx.lineTo(200, 200);
+    cx.closePath();
+    cx.stroke();
+
+    cx.lineWidth = 3;
+    cx.beginPath();
+    cx.arc(50, 50, 40, 0, 7);
+    cx.moveTo(190, 50);
+    cx.arc(150, 50, 40, 0, Math.PI / 2);
+    cx.stroke();
+
+    cx.lineWidth = 2;
+    cx.font = 'bold italic 24px Georgia';
+    cx.fillStyle = 'green';
+    cx.strokeStyle = 'blue';
+    cx.strokeText('Hello, world!', 10, 50);
+    cx.fillText('Hello, world!', 10, 50);
+  </script>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Empty Canvas</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+  </body>
+  <script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'red';
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(200, 100);
+    ctx.lineTo(100, 300);
+    ctx.lineTo(400, 300);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(500, 300);
+    ctx.fillStyle = 'green';
+    ctx.quadraticCurveTo(550, 100, 700, 300);
+    ctx.lineTo(550, 100);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(250, 580);
+    ctx.bezierCurveTo(250, 400, 550, 400, 400, 580);
+    ctx.lineTo(550, 400);
+    ctx.lineTo(250, 400);
+    ctx.closePath();
+    ctx.fillStyle = 'cyan';
+    ctx.fill();
+    ctx.stroke();
+  </script>
+</html>
