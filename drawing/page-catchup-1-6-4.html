@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Example</title>
+    <style>
+      canvas {
+        border: 1px solid #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="800" height="600"> </canvas>
+  </body>
+  <script>
+    function flipHorizontally(context, around) {
+      context.translate(around, 0);
+      context.scale(-1, 1);
+      context.translate(-around, 0);
+    }
+    let cx = document.getElementById('myCanvas').getContext('2d');
+    let img = document.createElement('img');
+    img.src = './player_big.png';
+    let spriteW = 48;
+    let spriteH = 60;
+    let cycle = 0;
+    img.addEventListener('load', function () {
+      setInterval(() => {
+        cx.clearRect(10, 10, spriteW, spriteH);
+        cx.clearRect(100, 10, spriteW, spriteH);
+        cx.drawImage(
+          img,
+          cycle * spriteW,
+          0,
+          spriteW,
+          spriteH,
+          10,
+          10,
+          spriteW,
+          spriteH
+        );
+
+        flipHorizontally(cx, 100 + spriteW / 2);
+        cx.drawImage(
+          img,
+          cycle * spriteW,
+          0,
+          spriteW,
+          spriteH,
+          100,
+          10,
+          spriteW,
+          spriteH
+        );
+
+        flipHorizontally(cx, 100 + spriteW / 2);
+        cycle = (cycle + 1) % 8;
+      }, 120);
+    });
+  </script>
+</html>

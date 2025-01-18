@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Example</title>
+  </head>
+  <style>
+    canvas {
+      border: 1px solid #000000;
+    }
+  </style>
+  <body>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+  </body>
+  <script>
+    const canvas = document.getElementById('myCanvas');
+    const cx = canvas.getContext('2d');
+    cx.scale(3, 0.5);
+    cx.beginPath();
+    cx.lineWidth = 3;
+    cx.arc(100, 600, 100, 0, 2 * Math.PI);
+    cx.stroke();
+
+    cx.scale(1 / 3, 2);
+    cx.beginPath();
+    cx.lineWidth = 2;
+    cx.arc(300, 300, 100, 0, 2 * Math.PI);
+    cx.stroke();
+  </script>
+</html>
