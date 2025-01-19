@@ -40,7 +40,7 @@
           spriteW,
           spriteH
         );
-
+        cx.save();
         flipHorizontally(cx, 100 + spriteW / 2);
         cx.drawImage(
           img,
@@ -54,7 +54,7 @@
           spriteH
         );
 
-        flipHorizontally(cx, 100 + spriteW / 2);
+        cx.restore();
         cycle = (cycle + 1) % 8;
       }, 120);
     });

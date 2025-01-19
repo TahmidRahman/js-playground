@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Example</title>
+    <style>
+      canvas {
+        border: 1px solid #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+  </body>
+  <script>
+    let cx = document.querySelector('canvas').getContext('2d');
+    function branch(length, angle, scale) {
+      // make it more explicit than the book example
+      cx.beginPath();
+      cx.moveTo(0, 0);
+      cx.lineTo(0, length);
+      cx.stroke();
+
+      if (length < 8) {
+        return;
+      }
+      cx.save();
+      cx.translate(0, length);
+      cx.rotate(-angle);
+      branch(length * scale, angle, scale);
+      cx.rotate(2 * angle);
+      branch(length * scale, angle, scale);
+      cx.restore();
+    }
+    cx.translate(250, 0);
+    branch(80, 0.5, 0.8);
+  </script>
+</html>
