@@ -17,13 +17,23 @@
     let cx = document.querySelector('canvas').getContext('2d');
     function trapezoid(context, x, y, h, l1, l2) {
       context.beginPath();
-      context.moveTo(x, y);
-      context.lineTo(x + l1, y);
-      context.lineTo(x + l1 + (l2 - l1) / 2, y + h);
-      context.lineTo(x - (l2 - l1) / 2, y + h);
+      context.moveTo(x - l1 / 2, y - h / 2);
+      context.lineTo(x + l1 / 2, y - h / 2);
+      context.lineTo(x + l2 / 2, y + h / 2);
+      context.lineTo(x - l2 / 2, y + h / 2);
       context.closePath();
       context.stroke();
     }
-    trapezoid(cx, 100, 10, 50, 100, 50);
+    function redDiamond(context, x, y, length) {
+      context.fillStyle = 'red';
+      context.save();
+      context.translate(x, y);
+      context.rotate(Math.PI / 4);
+      context.fillRect(-length / 2, -length / 2, length, length);
+      context.restore();
+    }
+
+    trapezoid(cx, 100, 75, 50, 80, 120);
+    redDiamond(cx, 200, 75, 50);
   </script>
 </html>
