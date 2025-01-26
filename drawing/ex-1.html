@@ -54,9 +54,25 @@
       context.stroke();
       context.restore();
     }
+    function spiral(context, cx, cy) {
+      let angle = 0;
+      let radius = 1;
+      context.save();
+      context.translate(cx, cy);
+      context.beginPath();
+      context.moveTo(0, 0);
+      for (let i = 0; i < 100; i++) {
+        context.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+        angle += 0.2;
+        radius += 0.5;
+      }
+      context.stroke();
+      context.restore();
+    }
 
     trapezoid(cx, 100, 75, 50, 80, 120);
     redDiamond(cx, 200, 75, 50);
     zigzaggingLine(cx, 250, 25, 100);
+    spiral(cx, 400, 100);
   </script>
 </html>
