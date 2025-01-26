@@ -33,14 +33,14 @@
       context.restore();
     }
     function zigzaggingLine(context, x, y, length) {
-      context.beginPath();
-      context.moveTo(x, y);
-      context.save();
       let angle = (7.5 / 180) * Math.PI;
       let direction;
+      context.save();
 
       //first line
       context.translate(x, y);
+      context.beginPath();
+      context.moveTo(0, 0);
       context.rotate(angle);
       context.lineTo(length, 0);
 
