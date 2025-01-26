@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Example</title>
+    <style>
+      canvas {
+        border: 1px solid #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+    <script>
+      let cx = document.querySelector('canvas').getContext('2d');
+      let results = [
+        { name: 'Satisfied', count: 1043, color: 'lightblue' },
+        { name: 'Neutral', count: 563, color: 'lightgreen' },
+        { name: 'Unsatisfied', count: 510, color: 'pink' },
+        { name: 'No comment', count: 175, color: 'silver' }
+      ];
+      let total = results.reduce((sum, { count }) => sum + count, 0);
+      let currentAngle = -0.5 * Math.PI;
+      let centerX = 200;
+      let centerY = 200;
+      for (let result of results) {
+        let sliceAngle = (result.count / total) * 2 * Math.PI;
+        let middleAngle = currentAngle + sliceAngle / 2;
+        let textX = Math.cos(middleAngle) * 120 + centerX;
+        let textY = Math.sin(middleAngle) * 120 + centerY;
+        cx.fillStyle = 'black';
+        cx.textBaseline = 'middle';
+        cx.textAlign = currentAngle + sliceAngle < Math.PI ? 'left' : 'right';
+        cx.fillText(result.name, textX, textY);
+        cx.beginPath();
+        cx.arc(centerX, centerY, 100, currentAngle, currentAngle + sliceAngle);
+        cx.lineTo(centerX, centerY);
+        cx.fillStyle = result.color;
+        cx.fill();
+        currentAngle += sliceAngle;
+      }
+    </script>
+  </body>
+</html>
