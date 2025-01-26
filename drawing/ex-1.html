@@ -69,10 +69,34 @@
       context.stroke();
       context.restore();
     }
+    function yellowStar(context, cx, cy) {
+      context.beginPath();
+      context.moveTo(cx + 100, cy);
+      let radius = 50;
+      context.arc(cx, cy, radius - 5, 0, 2 * Math.PI);
+      context.fillStyle = 'gold';
+      context.fill();
+      context.fillStyle = 'white';
+      for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 4) {
+        context.beginPath();
+        context.moveTo(
+          Math.cos(angle) * radius + cx,
+          Math.sin(angle) * radius + cy
+        );
+        context.quadraticCurveTo(
+          cx,
+          cy,
+          Math.cos(angle + Math.PI / 4) * radius + cx,
+          Math.sin(angle + Math.PI / 4) * radius + cy
+        );
+        context.fill();
+      }
+    }
 
     trapezoid(cx, 100, 75, 50, 80, 120);
     redDiamond(cx, 200, 75, 50);
     zigzaggingLine(cx, 250, 25, 100);
-    spiral(cx, 400, 100);
+    spiral(cx, 400, 75);
+    yellowStar(cx, 500, 75);
   </script>
 </html>
