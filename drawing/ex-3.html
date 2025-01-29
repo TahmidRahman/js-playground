@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drawing Example 3</title>
+    <style>
+      canvas {
+        border: 1px solid #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="700" height="500"></canvas>
+  </body>
+  <script>
+    class Vector {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+      }
+      plus(other) {
+        return new Vector(this.x + other.x, this.y + other.y);
+      }
+    }
+
+    let cx = document.querySelector('canvas').getContext('2d');
+    let radius = 10;
+    let ballX = radius + 2;
+    let ballY = radius + 2;
+    let lastTime = null;
+    cx.fillStyle = 'red';
+
+    function animate(time, lastTime) {
+      if (
+        lastTime != null &&
+        ballX < 400 - radius - 2 &&
+        ballY < 400 - radius - 3
+      ) {
+        cx.clearRect(0, 0, 400, 400);
+        ballX += (time - lastTime) * 0.2;
+        ballY += (time - lastTime) * 0.1;
+        cx.beginPath();
+        cx.arc(ballX, ballY, radius, 0, 7);
+        cx.fill();
+      }
+      requestAnimationFrame((newTime) => animate(newTime, time));
+    }
+
+    cx.strokeRect(0, 0, 400, 400);
+    requestAnimationFrame(animate);
+  </script>
+</html>
