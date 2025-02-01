@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Drawing Example 3</title>
+    <title>Drawing exercise 3</title>
     <style>
       canvas {
         border: 1px solid #000000;
@@ -26,22 +26,24 @@
 
     let cx = document.querySelector('canvas').getContext('2d');
     let radius = 10;
-    let ballX = radius + 2;
-    let ballY = radius + 2;
+    let ball = new Vector(radius, radius);
+    let speed = new Vector(0.12, 0.1);
     let lastTime = null;
     cx.fillStyle = 'red';
 
     function animate(time, lastTime) {
-      if (
-        lastTime != null &&
-        ballX < 400 - radius - 2 &&
-        ballY < 400 - radius - 3
-      ) {
+      if (lastTime != null) {
         cx.clearRect(0, 0, 400, 400);
-        ballX += (time - lastTime) * 0.2;
-        ballY += (time - lastTime) * 0.1;
+        if (ball.x > 400 - radius || ball.x < radius) {
+          speed.x = speed.x * -1;
+        }
+        if (ball.y > 400 - radius || ball.y < radius) {
+          speed.y = speed.y * -1;
+        }
+        let diff = time - lastTime;
+        ball = ball.plus(new Vector(diff * speed.x, diff * speed.y));
         cx.beginPath();
-        cx.arc(ballX, ballY, radius, 0, 7);
+        cx.arc(ball.x, ball.y, radius, 0, 7);
         cx.fill();
       }
       requestAnimationFrame((newTime) => animate(newTime, time));
