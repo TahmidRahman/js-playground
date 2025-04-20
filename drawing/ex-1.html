@@ -70,27 +70,19 @@
       context.restore();
     }
     function yellowStar(context, cx, cy) {
-      context.beginPath();
       context.moveTo(cx + 100, cy);
       let radius = 50;
-      context.arc(cx, cy, radius - 5, 0, 2 * Math.PI);
-      context.fillStyle = 'gold';
-      context.fill();
-      context.fillStyle = 'white';
-      for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 4) {
-        context.beginPath();
-        context.moveTo(
-          Math.cos(angle) * radius + cx,
-          Math.sin(angle) * radius + cy
-        );
+      context.beginPath();
+      for (let angle = 0; angle <= 2 * Math.PI; angle += Math.PI / 4) {
         context.quadraticCurveTo(
           cx,
           cy,
           Math.cos(angle + Math.PI / 4) * radius + cx,
           Math.sin(angle + Math.PI / 4) * radius + cy
         );
-        context.fill();
       }
+      context.fillStyle = 'gold';
+      context.fill();
     }
 
     trapezoid(cx, 100, 75, 50, 80, 120);
