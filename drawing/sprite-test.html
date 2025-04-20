@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doraemon</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+  </body>
+  <script>
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const image = document.createElement('img');
+    image.src = './doraemon_sprite.png';
+    image.addEventListener('load', () => {
+      const width = 246;
+      const height = 320;
+      let sx = 0;
+      let sy = 0;
+      setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, sx, sy, width, height, 0, 0, width, height);
+        sx += width;
+        if (sy == height && sx >= width * 2) {
+          sx = 0;
+          sy = 0;
+        }
+        if (sx >= width * 4) {
+          sx = 0;
+          sy += height;
+        }
+      }, 200);
+    });
+  </script>
+</html>
